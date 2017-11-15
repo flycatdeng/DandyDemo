@@ -96,14 +96,14 @@ public class ActorObject3D extends Actor {
             public void run() {
                 int target = GLES20.GL_ARRAY_BUFFER;
                 int usage = GLES20.GL_STATIC_DRAW;
-                VBOHelper.VBOOptions vertexVBO = new VBOHelper.VBOOptions("vertexVBO", target, mVertexBuffer.capacity() * 4, mVertexBuffer, usage,
+                VBOHelper.VBOOptions vertexVBO = VBOHelper.VBOOptions.obtainDrawOptions("vertexVBO", target, mVertexBuffer.capacity() * 4, mVertexBuffer, usage,
                         maPositionHandle, 3, GLES20.GL_FLOAT, false, 0, 0);
                 mVBOOptions.add(vertexVBO);
-                VBOHelper.VBOOptions normalVBO = new VBOHelper.VBOOptions("normalVBO", target, mNormalBuffer.capacity() * 4, mNormalBuffer, usage,
+                VBOHelper.VBOOptions normalVBO = VBOHelper.VBOOptions.obtainDrawOptions("normalVBO", target, mNormalBuffer.capacity() * 4, mNormalBuffer, usage,
                         maNormalHandle, 3, GLES20.GL_FLOAT, false, 0, 0);
                 mVBOOptions.add(normalVBO);
                 if (mMatHasTexCoor == 1f) {
-                    VBOHelper.VBOOptions TexCoorVBO = new VBOHelper.VBOOptions("TexCoorVBO", target, mTexCoorBuffer.capacity() * 4, mTexCoorBuffer, usage,
+                    VBOHelper.VBOOptions TexCoorVBO = VBOHelper.VBOOptions.obtainDrawOptions("TexCoorVBO", target, mTexCoorBuffer.capacity() * 4, mTexCoorBuffer, usage,
                             maTexCoorHandle, 2, GLES20.GL_FLOAT, false, 0, 0);
                     mVBOOptions.add(TexCoorVBO);
                 }

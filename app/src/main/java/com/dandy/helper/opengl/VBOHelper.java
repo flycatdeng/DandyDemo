@@ -28,20 +28,33 @@ public class VBOHelper {
             LogHelper.d(TAG, LogHelper.getThreadName() + " vboOptionsList == null || vboOptionsList.size() == 0");
             return;
         }
-        int size = vboOptionsList.size();
-        int[] vboIDs = new int[size];
-        GLES20.glGenBuffers(size, vboIDs, 0);//申请一个缓冲区
-        for (int i = 0; i < size; i++) {
-            VBOOptions vboOptions = vboOptionsList.get(i);
-            GLES20.glBindBuffer(vboOptions.target, vboIDs[i]);//绑定缓冲区
-            GLES20.glBufferData(vboOptions.target, vboOptions.size, vboOptions.buffer, vboOptions.usage);
-            vboOptions.vboId = vboIDs[i];
+        try {
+            LogHelper.d(TAG, "1");
+            int size = vboOptionsList.size();
+            int[] vboIDs = new int[size];
+            GLES20.glGenBuffers(size, vboIDs, 0);//申请一个缓冲区
+            LogHelper.d(TAG, "2 size=" + size);
+            for (int i = 0; i < size; i++) {
+                VBOOptions vboOptions = vboOptionsList.get(i);
+                LogHelper.d(TAG, "3 i=" + i + " vboOptions.target=" + vboOptions.target + " vboIDs[i]=" + vboIDs[i]);
+                GLES20.glBindBuffer(vboOptions.target, vboIDs[i]);//绑定缓冲区
+                LogHelper.d(TAG, "3  vboOptions.size=" + vboOptions.size + " vboOptions.buffer capacity()=" + vboOptions.buffer.capacity());
+                GLES20.glBufferData(vboOptions.target, vboOptions.size, vboOptions.buffer, vboOptions.usage);
+                GLCommonUtils.checkGlError("glBufferData");
+                LogHelper.d(TAG, "3 ");
+                vboOptions.vboId = vboIDs[i];
+            }
+            LogHelper.d(TAG, "4");
+            if (releaseBind) {
+                //TODO 目前只有这两种，如果还有其他的种类的话再重构吧
+                GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);//现在不使用这个缓冲区
+                GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);//现在不使用这个缓冲区
+            }
+            LogHelper.d(TAG, "5");
+        } catch (Exception e) {
+            LogHelper.e(TAG, LogHelper.getThreadName(), e);
         }
-        if (releaseBind) {
-            //TODO 目前只有这两种，如果还有其他的种类的话再重构吧
-            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);//现在不使用这个缓冲区
-            GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);//现在不使用这个缓冲区
-        }
+
     }
 
     public static void drawVBOs(List<VBOOptions> vboOptionsList) {
@@ -140,20 +153,20 @@ public class VBOHelper {
         private VBOOptions() {
         }
 
-        private VBOOptions(String tag, int target, int size, Buffer buffer, int usage,
-                           int glVertexAttribHandleID, int glVertexAttribSize, int glVertexAttribType, boolean glVertexAttribNormalized, int glVertexAttribStride, int glVertexAttribOffset) {
-            this.tag = tag;
-            this.target = target;
-            this.size = size;
-            this.buffer = buffer;
-            this.usage = usage;
-            this.glVertexAttribHandleID = glVertexAttribHandleID;
-            this.glVertexAttribSize = glVertexAttribSize;
-            this.glVertexAttribType = glVertexAttribType;
-            this.glVertexAttribNormalized = glVertexAttribNormalized;
-            this.glVertexAttribStride = glVertexAttribStride;
-            this.glVertexAttribOffset = glVertexAttribOffset;
-        }
+//        private VBOOptions(String tag, int target, int size, Buffer buffer, int usage,
+//                           int glVertexAttribHandleID, int glVertexAttribSize, int glVertexAttribType, boolean glVertexAttribNormalized, int glVertexAttribStride, int glVertexAttribOffset) {
+//            this.tag = tag;
+//            this.target = target;
+//            this.size = size;
+//            this.buffer = buffer;
+//            this.usage = usage;
+//            this.glVertexAttribHandleID = glVertexAttribHandleID;
+//            this.glVertexAttribSize = glVertexAttribSize;
+//            this.glVertexAttribType = glVertexAttribType;
+//            this.glVertexAttribNormalized = glVertexAttribNormalized;
+//            this.glVertexAttribStride = glVertexAttribStride;
+//            this.glVertexAttribOffset = glVertexAttribOffset;
+//        }
 
         private VBOOptions(String tag, int target, int size, Buffer buffer, int usage) {
             this.tag = tag;
@@ -301,5 +314,4 @@ public class VBOHelper {
             this.glVertexAttribOffset = glVertexAttribOffset;
         }
     }
-
 }

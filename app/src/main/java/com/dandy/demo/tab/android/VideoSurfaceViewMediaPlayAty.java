@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.TextView;
 
 import com.dandy.demo.tab.BaseDemoAty;
 import com.dandy.helper.android.media.SurfaceVideoPlayerAider;
+
+import java.io.File;
 
 /**
  * <pre>
@@ -20,13 +23,20 @@ import com.dandy.helper.android.media.SurfaceVideoPlayerAider;
  */
 
 public class VideoSurfaceViewMediaPlayAty extends BaseDemoAty {
-    private static final String SDCARD_RES_PATH="sdcard/test.mp4";
+    private static final String SDCARD_RES_PATH = "sdcard/test.mp4";
     private SurfaceView mSurfaceView;
     private SurfaceVideoPlayerAider mSurfaceVideoPlayerAider;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        File file = new File(SDCARD_RES_PATH);
+        if (!file.exists()) {
+            TextView textView = new TextView(this);
+            textView.setText("The path does not exist :" + SDCARD_RES_PATH);
+            setContentView(textView);
+            return;
+        }
         mSurfaceView = new SurfaceView(this);
         mSurfaceVideoPlayerAider = new SurfaceVideoPlayerAider(this);
 //        mSurfaceVideoPlayerAider.setResFromAssets("demo/video/test.mp4");
@@ -53,18 +63,24 @@ public class VideoSurfaceViewMediaPlayAty extends BaseDemoAty {
     @Override
     protected void onResume() {
         super.onResume();
-        mSurfaceVideoPlayerAider.onResume();
+        if (mSurfaceVideoPlayerAider != null) {
+            mSurfaceVideoPlayerAider.onResume();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mSurfaceVideoPlayerAider.onPause();
+        if (mSurfaceVideoPlayerAider != null) {
+            mSurfaceVideoPlayerAider.onPause();
+        }
     }
 
     @Override
     protected void onDestroy() {
-        mSurfaceVideoPlayerAider.onDestroy();
+        if (mSurfaceVideoPlayerAider != null) {
+            mSurfaceVideoPlayerAider.onDestroy();
+        }
         super.onDestroy();
     }
 }
