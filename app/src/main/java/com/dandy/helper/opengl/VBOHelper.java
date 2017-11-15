@@ -29,28 +29,20 @@ public class VBOHelper {
             return;
         }
         try {
-            LogHelper.d(TAG, "1");
             int size = vboOptionsList.size();
             int[] vboIDs = new int[size];
             GLES20.glGenBuffers(size, vboIDs, 0);//申请一个缓冲区
-            LogHelper.d(TAG, "2 size=" + size);
             for (int i = 0; i < size; i++) {
                 VBOOptions vboOptions = vboOptionsList.get(i);
-                LogHelper.d(TAG, "3 i=" + i + " vboOptions.target=" + vboOptions.target + " vboIDs[i]=" + vboIDs[i]);
                 GLES20.glBindBuffer(vboOptions.target, vboIDs[i]);//绑定缓冲区
-                LogHelper.d(TAG, "3  vboOptions.size=" + vboOptions.size + " vboOptions.buffer capacity()=" + vboOptions.buffer.capacity());
                 GLES20.glBufferData(vboOptions.target, vboOptions.size, vboOptions.buffer, vboOptions.usage);
-                GLCommonUtils.checkGlError("glBufferData");
-                LogHelper.d(TAG, "3 ");
                 vboOptions.vboId = vboIDs[i];
             }
-            LogHelper.d(TAG, "4");
             if (releaseBind) {
                 //TODO 目前只有这两种，如果还有其他的种类的话再重构吧
                 GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);//现在不使用这个缓冲区
                 GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);//现在不使用这个缓冲区
             }
-            LogHelper.d(TAG, "5");
         } catch (Exception e) {
             LogHelper.e(TAG, LogHelper.getThreadName(), e);
         }
