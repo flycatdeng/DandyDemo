@@ -35,7 +35,7 @@ public class Obj3DLoadAiderAty extends SimpleGLActivity {
                 super.onCreate(stage);
                 obj = new ActorObject3D(context);
                 obj.setTexture(AssetsHelper.getBitmap(context, "demo/obj/head.jpg"));
-                new Obj3DLoadAider().loadFromInputStreamAsync(AssetsHelper.getInputStream(context, "demo/obj/head.obj"), new OnLoadListener() {
+                new Obj3DLoadAider().loadFromInputStreamAsync(AssetsHelper.getInputStream(context, "demo/obj/changgui.obj"), new OnLoadListener() {
                     @Override
                     public void onLoadOK(Obj3DLoadResult result) {
                         LogHelper.d(TAG, LogHelper.getThreadName() + " Obj3DLoadResult result=" + result.toString());
