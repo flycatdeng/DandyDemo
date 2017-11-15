@@ -1,0 +1,21 @@
+
+vertex_source_file facemixobj.vert     //顶点着色器文件：对应目录的文件名
+fragment_source_file facemixobj.frag   //片元着色器文件：对应目录的文件名
+
+//属性
+attribute vec3 aPosition
+attribute vec3 aNormal
+attribute vec2 aTexCoor
+uniform mat4 uMVPMatrix
+uniform mat4 uModelMatrix
+uniform mat4 uViewMatrix
+uniform mat4 uModelViewMatrix
+uniform vec3 uLightLocation
+uniform vec3 uCameraLocation
+uniform sampler2D uTexture
+uniform float uHasTexCoor
+uniform float uHasTexture
+attribute vec3 aKaikouPosition
+attribute vec3 aPiezuiPosition
+attribute vec3 aYoupiezuiPosition
+uniform vec4 uPositionWeight
