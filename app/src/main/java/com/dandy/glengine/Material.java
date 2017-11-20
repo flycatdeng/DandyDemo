@@ -69,7 +69,7 @@ public class Material {
             result.mPropertyNameHandlerMap.put(propertyName, handler);//每个属性名称和对应shader中的ID的集合
         }
         parser.destroy();//解析工作完成，释放资源
-        return null;
+        return result;
     }
 
     /**
