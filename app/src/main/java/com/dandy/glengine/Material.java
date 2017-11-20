@@ -32,21 +32,25 @@ public class Material {
     private int mProgramID;
     private ConcurrentHashMap<String, Integer> mPropertyNameHandlerMap = new ConcurrentHashMap<String, Integer>();
 
+    private Material() {
+    }
+
     /**
-     * shader信息类
+     * 获得shader信息类
      * 该构造器暂时只支持从assets目录下获取.mat文件
      *
      * @param context            上下文
      * @param assetsMaterialFile .mat文件名
      */
-    public Material(Context context, String assetsMaterialFile) {
+    public static Material obtainFromAssets(Context context, String assetsMaterialFile) {
+        Material result = new Material();
         String parentDir = StringHelper.getParentDirectory(assetsMaterialFile);//得到当前文件所在的文件夹
         MaterialParser parser = new MaterialParser();
         parser.parse(AssetsHelper.getInputStream(context, assetsMaterialFile));//解析.mat文件
         String vertexFile = parentDir + File.separator + parser.getVertexFileName();//得到.vert文件路劲
         String fragmentFile = parentDir + File.separator + parser.getFragmentFileName();//得到.frag文件路劲
         LogHelper.d(TAG, "vertexFile=" + vertexFile + " fragmentFile=" + fragmentFile);
-        mProgramID = ShaderHelper.getProgram(
+        result.mProgramID = ShaderHelper.getProgram(
                 AssetsHelper.getFileContent(context, vertexFile),//顶点着色器文本
                 AssetsHelper.getFileContent(context, fragmentFile)//片元着色器文本
         );//获得shader的programID
@@ -58,13 +62,14 @@ public class Material {
             final String propertyAuthority = (String) entry.getValue();
             int handler = -1;
             if (propertyAuthority.equals("attribute")) {
-                handler = GLES20.glGetAttribLocation(mProgramID, propertyName);//通过mProgramID（shader）获得对应权限的名称及其返回的句柄ID
+                handler = GLES20.glGetAttribLocation(result.mProgramID, propertyName);//通过mProgramID（shader）获得对应权限的名称及其返回的句柄ID
             } else if (propertyAuthority.equals("uniform")) {
-                handler = GLES20.glGetUniformLocation(mProgramID, propertyName);
+                handler = GLES20.glGetUniformLocation(result.mProgramID, propertyName);
             }
-            mPropertyNameHandlerMap.put(propertyName, handler);//每个属性名称和对应shader中的ID的集合
+            result.mPropertyNameHandlerMap.put(propertyName, handler);//每个属性名称和对应shader中的ID的集合
         }
         parser.destroy();//解析工作完成，释放资源
+        return null;
     }
 
     /**

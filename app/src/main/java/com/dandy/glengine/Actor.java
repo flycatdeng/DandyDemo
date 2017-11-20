@@ -127,9 +127,21 @@ public class Actor implements IGLActor, IActorMatrixOperation, IActorPendding {
     }
 
     /**
-     * 设置纹理
+     * <pre>
+     *     初始化纹理，只有当mTextureID为-1的时候才会更改mTextureID的值
+     *     如果想直接更换mTextureID的值，请调用{@link #setTexture(int)}
+     * </pre>
      */
     public void initTexture(int textureId) {
+        if (mTextureID == -1) {
+            mTextureID = textureId;
+        }
+    }
+
+    /**
+     * 设置纹理
+     */
+    public void setTexture(int textureId) {
         mTextureID = textureId;
     }
 
@@ -148,7 +160,7 @@ public class Actor implements IGLActor, IActorMatrixOperation, IActorPendding {
         addRunOnceCreateProgramBeforeDraw(new Runnable() {
             @Override
             public void run() {
-                mMaterial = new Material(mContext, materialFile);
+                mMaterial = Material.obtainFromAssets(mContext, materialFile);
                 mProgramID = mMaterial.getProgramID();
                 LogHelper.d(TAG, "setMaterialFromAssets materialFile=" + materialFile + " mProgramID=" + mProgramID);
                 onShaderLocationInit();//初始化完program之后就获取对应的location
