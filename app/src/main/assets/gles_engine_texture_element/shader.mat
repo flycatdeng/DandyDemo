@@ -1,0 +1,6 @@
+vertex_source_file shader.vert     //顶点着色器文件：对应目录的文件名
+fragment_source_file shader.frag   //片元着色器文件：对应目录的文件名
+
+attribute vec3 aPosition
+attribute vec4 aTexCoor
+uniform sampler2D uTexture
