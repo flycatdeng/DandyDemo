@@ -100,6 +100,12 @@ public interface IActorMatrixOperation {
     float[] getMVPMatrix();
 
     /**
+     * 可以手动设置MVP矩阵，因为不一定是由自己计算出来的，例如相机等就可以直接得到一个最终的MVP矩阵
+     * @param matrix
+     */
+    void setMVPMatrix(float[] matrix);
+
+    /**
      * 得到模型变换矩阵
      *
      * @return

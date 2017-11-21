@@ -316,6 +316,11 @@ public class Actor implements IGLActor, IActorMatrixOperation, IActorPendding {
     }
 
     @Override
+    public void setMVPMatrix(float[] matrix) {
+        mMatrixAider.setMVPMatrix(matrix);
+    }
+
+    @Override
     public float[] getModelMatrix() {
         return mMatrixAider.getModelMatrix();
     }
