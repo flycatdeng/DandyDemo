@@ -39,7 +39,7 @@ public class ElementTexture extends Actor {
 
             @Override
             public void run() {
-                LogHelper.d(TAG,LogHelper.getThreadName()+"");
+                LogHelper.d(TAG, LogHelper.getThreadName() + "");
                 vertices = new float[]{//
                         -squareSize_w * mWHScale, squareSize_h, 0.0f, // top left
                         -squareSize_w * mWHScale, -squareSize_h, 0.0f, // bottom// left
@@ -93,9 +93,9 @@ public class ElementTexture extends Actor {
     @Override
     protected void onDraw() {
         super.onDraw();
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
-        LogHelper.d(TAG,LogHelper.getThreadName()+" aPositionHandle="+aPositionHandle+" aTexCoorHandle="+
-                aTexCoorHandle+" uTextureHandle="+uTextureHandle+" mTextureID="+mTextureID+" mVertexCount="+mVertexCount);
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+        LogHelper.d(TAG, LogHelper.getThreadName() + " aPositionHandle=" + aPositionHandle + " aTexCoorHandle=" +
+                aTexCoorHandle + " uTextureHandle=" + uTextureHandle + " mTextureID=" + mTextureID + " mVertexCount=" + mVertexCount);
         if (aPositionHandle != -1) {
             GLES20.glVertexAttribPointer(aPositionHandle,//指定要修改的顶点属性的索引值,句柄
                     3,//指定每个顶点属性的组件数量。必须为1、2、3或者4。初始值为4。（如position是由3个（x,y,z）组成，而颜色是4个（r,g,b,a））,这里我们没有用到Z轴
@@ -116,16 +116,33 @@ public class ElementTexture extends Actor {
             GLES20.glUniform1i(uTextureHandle, 0);
         }
 
-        onDrawArraysPre();
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES, mVertexCount * 3 / 2, GLES20.GL_UNSIGNED_SHORT, mDrawOrderBuffer);
+        onDrawElementsPre();
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, DRAW_ORDER.length, GLES20.GL_UNSIGNED_SHORT, mDrawOrderBuffer);
         GLES20.glDisableVertexAttribArray(aPositionHandle);
         GLES20.glDisableVertexAttribArray(aTexCoorHandle);
-        onDrawArraysAfter();
+        onDrawElementsAfter();
     }
 
-    protected void onDrawArraysPre() {
+    protected void onDrawElementsPre() {
     }
 
-    protected void onDrawArraysAfter() {
+    protected void onDrawElementsAfter() {
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mPositionBuffer != null) {
+            mPositionBuffer.clear();
+            mPositionBuffer = null;
+        }
+        if (mDrawOrderBuffer != null) {
+            mDrawOrderBuffer.clear();
+            mDrawOrderBuffer = null;
+        }
+        if (mTexCoorBuffer != null) {
+            mTexCoorBuffer.clear();
+            mTexCoorBuffer = null;
+        }
+        super.onDestroy();
     }
 }
