@@ -56,9 +56,21 @@ public class ElementTexture extends Actor {
     @Override
     protected void onShaderLocationInit() {
         super.onShaderLocationInit();
-        aPositionHandle = getMaterialHandler("aPosition");
-        aTexCoorHandle = getMaterialHandler("aTexCoor");
-        uTextureHandle = getMaterialHandler("uTexture");
+        aPositionHandle = getPositionHandle();
+        aTexCoorHandle = getTexCoorHandle();
+        uTextureHandle = getTextureHandle();
+    }
+
+    protected int getPositionHandle() {
+        return getMaterialHandler("aPosition");
+    }
+
+    protected int getTexCoorHandle() {
+        return getMaterialHandler("aTexCoor");
+    }
+
+    protected int getTextureHandle() {
+        return getMaterialHandler("uTexture");
     }
 
     /**
