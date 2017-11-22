@@ -23,6 +23,7 @@ public class MVPMatrixAider {
     private float[] mModelMatrix = new float[16];// 具体物体的移动旋转矩阵，旋转、平移、缩放
     private float[] mMVMatrix = new float[16];// 模型和摄像机位置的变换矩阵
     private float[] mMVPMatrix = new float[16];// 最后起作用的总变换矩阵
+    private float[] mSetMVPMatrix;//用于设置的总变换矩阵
     private float[] mViewProjMatrix = new float[16];
     private ProjectType mProjectType;//投影类型，正交、透视
 
@@ -41,11 +42,17 @@ public class MVPMatrixAider {
     }
 
     /**
-     * 得到物体本身变换以及观察点变换以及投影矩阵综合的总变换矩阵
+     * <pre>
+     *     得到物体本身变换以及观察点变换以及投影矩阵综合的总变换矩阵
+     *     如果设置的MVP矩阵不为null的话则会有限使用从外部设置的MVP矩阵
+     * </pre>
      *
      * @return
      */
     public float[] getMVPMatrix() {
+        if (mSetMVPMatrix != null) {
+            return mSetMVPMatrix;
+        }
         Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);//左乘，mViewMatrix左乘mModelMatrix的结果给mMVPMatrix，其实就是mMVMatrix
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectMatrix, 0, mMVPMatrix, 0);//mMVMatrix左乘mProjectMatrix 得到mMVPMatrix
         return mMVPMatrix;
@@ -58,12 +65,13 @@ public class MVPMatrixAider {
      */
     public void setMVPMatrix(float[] matrix) {
         if (matrix == null) {
-            matrix = new float[16];
+            mSetMVPMatrix = null;
+            return;
         }
         if (matrix.length != 16) {
             throw new RuntimeException("setMVPMatrix matrix.length must be 16");
         }
-        mMVPMatrix = Arrays.copyOf(matrix, matrix.length);
+        mSetMVPMatrix = Arrays.copyOf(matrix, matrix.length);
     }
 
     /**
