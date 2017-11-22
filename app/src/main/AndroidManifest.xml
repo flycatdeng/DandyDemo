@@ -57,7 +57,7 @@
         </activity>
         <activity
             android:name=".tab.opengl.Obj3DLoadAiderAty"
-            android:label="Obj3DLoadAider">
+            android:label="OBJ/Obj3DLoadAider">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="com.dandy.demo.category.OPENGL" />
@@ -97,7 +97,7 @@
         </activity>
         <activity
             android:name=".tab.opengl.FaceObjMixAnimAty"
-            android:label="FaceObjMixAnim">
+            android:label="OBJ/FaceObjMixAnim">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -116,6 +116,14 @@
         <activity
             android:name=".tab.opengl.ElementTextureAty"
             android:label="ElementTexture">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="com.dandy.demo.category.OPENGL" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".tab.opengl.Obj3DBufferLoadAiderAty"
+            android:label="OBJ/Obj3DBufferLoadAider">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
