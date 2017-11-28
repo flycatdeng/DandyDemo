@@ -296,6 +296,11 @@ public class Actor implements IGLActor, IActorMatrixOperation, IActorPendding {
     }
 
     @Override
+    public void scale(float scale) {
+        mMatrixAider.scale(scale, scale, scale);
+    }
+
+    @Override
     public void setCamera(float cx, float cy, float cz, float tx, float ty, float tz, float upx, float upy, float upz) {
         mMatrixAider.setCamera(cx, cy, cz, tx, ty, tz, upx, upy, upz);
     }

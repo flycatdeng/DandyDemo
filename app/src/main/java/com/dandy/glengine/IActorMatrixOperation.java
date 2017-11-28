@@ -40,7 +40,7 @@ public interface IActorMatrixOperation {
     void rotate(float angle, float x, float y, float z);
 
     /**
-     * 缩放
+     * 在原有的基础上进行缩放
      *
      * @param x
      * @param y
@@ -49,9 +49,14 @@ public interface IActorMatrixOperation {
     void scale(float x, float y, float z);
 
     /**
-     * 缩放
+     * 在原有的基础上进行缩放
      */
     void scale(Vec3 scale);
+
+    /**
+     * 在原有的基础上进行缩放
+     */
+    void scale(float scale);
 
     /**
      * 设置摄像机
