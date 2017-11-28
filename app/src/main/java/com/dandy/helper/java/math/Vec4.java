@@ -128,6 +128,24 @@ public class Vec4 implements Serializable, Vec<Vec4> {
     }
 
     @Override
+    public Vec4 multiply(float value) {
+        x *= value;
+        y *= value;
+        z *= value;
+        w *= value;
+        return this;
+    }
+
+    @Override
+    public Vec4 multiply(Vec4 vec) {
+        x *= vec.x;
+        y *= vec.y;
+        z *= vec.z;
+        w *= vec.w;
+        return this;
+    }
+
+    @Override
     public Vec4 normalize() {
         return floatArrayToVec(FloatHelper.normalize(this.toFloatArray()));
     }

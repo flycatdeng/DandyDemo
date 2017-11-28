@@ -100,6 +100,20 @@ public class Vec2 implements Serializable, Vec<Vec2> {
     }
 
     @Override
+    public Vec2 multiply(float sameValue) {
+        this.x *= sameValue;
+        this.y *= sameValue;
+        return this;
+    }
+
+    @Override
+    public Vec2 multiply(Vec2 vec) {
+        this.x *= vec.x;
+        this.y *= vec.y;
+        return this;
+    }
+
+    @Override
     public Vec2 normalize() {
         return floatArrayToVec(FloatHelper.normalize(this.toFloatArray()));
     }

@@ -66,6 +66,22 @@ public interface Vec<T extends Vec<T>> {
     T minus(float... values);
 
     /**
+     * 向量所有元素分别乘以参数中的标量，返回自身
+     *
+     * @param sameValue
+     * @return
+     */
+    T multiply(float sameValue);
+
+    /**
+     * 向量所有元素分别乘以向量中对应位置的标量，返回自身
+     *
+     * @param t
+     * @return
+     */
+    T multiply(T t);
+
+    /**
      * 向量归一化，返回一个新向量
      *
      * @return
@@ -81,6 +97,7 @@ public interface Vec<T extends Vec<T>> {
 
     /**
      * 求得各元素的和
+     *
      * @return
      */
     float getItemSum();

@@ -131,6 +131,21 @@ public class Vec3 implements Serializable, Vec<Vec3> {
         }
     }
 
+    @Override
+    public Vec3 multiply(float value) {
+        x *= value;
+        y *= value;
+        z *= value;
+        return this;
+    }
+
+    @Override
+    public Vec3 multiply(Vec3 vec) {
+        x *= vec.x;
+        y *= vec.y;
+        z *= vec.z;
+        return this;
+    }
 
     @Override
     public Vec3 normalize() {
