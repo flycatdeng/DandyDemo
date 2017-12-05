@@ -1,7 +1,5 @@
 package com.dandy.helper.opengl.eglconfigchooser;
 
-import android.opengl.GLSurfaceView;
-
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
@@ -15,13 +13,11 @@ import javax.microedition.khronos.egl.EGLDisplay;
  * Email:dengchukun@qq.com
  * Wechat:flycatdeng
  */
-
-public class AntiAliasingEGLConfigChooser implements GLSurfaceView.EGLConfigChooser {
+public class AntiAliasingEGLConfigChooser implements EGLConfigChooser {
     @Override
     public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
         int attribs[] = {
                 EGL10.EGL_LEVEL, 0,
-                EGL10.EGL_RENDERABLE_TYPE, 4,  // EGL_OPENGL_ES2_BIT
                 EGL10.EGL_COLOR_BUFFER_TYPE, EGL10.EGL_RGB_BUFFER,
                 EGL10.EGL_RED_SIZE, 8,
                 EGL10.EGL_GREEN_SIZE, 8,
@@ -29,6 +25,7 @@ public class AntiAliasingEGLConfigChooser implements GLSurfaceView.EGLConfigChoo
                 EGL10.EGL_DEPTH_SIZE, 16,
                 EGL10.EGL_SAMPLE_BUFFERS, 1,
                 EGL10.EGL_SAMPLES, 4,  // 在这里修改MSAA的倍数，4就是4xMSAA，再往上开程序可能会崩
+                EGL10.EGL_RENDERABLE_TYPE, 4,  // 指定渲染api类别,这里或者是硬编码的4，或者是EGL14.EGL_OPENGL_ES2_BIT
                 EGL10.EGL_NONE
         };
         EGLConfig[] configs = new EGLConfig[1];
