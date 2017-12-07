@@ -1,4 +1,4 @@
-package com.dandy.helper.opengl.eglconfigchooser;
+package com.dandy.helper.opengl.egl;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;

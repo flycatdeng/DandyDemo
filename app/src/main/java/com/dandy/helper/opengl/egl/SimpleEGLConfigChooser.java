@@ -1,4 +1,4 @@
-package com.dandy.helper.opengl.eglconfigchooser;
+package com.dandy.helper.opengl.egl;
 
 /**
  * This class will choose a RGB_888 surface with

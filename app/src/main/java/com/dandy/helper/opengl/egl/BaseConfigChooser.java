@@ -1,4 +1,4 @@
-package com.dandy.helper.opengl.eglconfigchooser;
+package com.dandy.helper.opengl.egl;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -66,7 +66,7 @@ public abstract class BaseConfigChooser
         int[] newConfigSpec = new int[len + 2];
         System.arraycopy(configSpec, 0, newConfigSpec, 0, len - 1);
         newConfigSpec[len - 1] = EGL10.EGL_RENDERABLE_TYPE;// 指定渲染api类别,这里或者是硬编码的4，或者是EGL14.EGL_OPENGL_ES2_BIT
-        newConfigSpec[len] = 4; /* EGL_OPENGL_ES2_BIT */
+        newConfigSpec[len] = 4; /* EGL14.EGL_OPENGL_ES2_BIT，3.0是EGLExt.EGL_OPENGL_ES3_BIT_KHR*/
         newConfigSpec[len + 1] = EGL10.EGL_NONE;// 总是以EGL10.EGL_NONE结尾
         return newConfigSpec;
     }
