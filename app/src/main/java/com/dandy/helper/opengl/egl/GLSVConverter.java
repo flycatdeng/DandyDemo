@@ -17,7 +17,7 @@ import javax.microedition.khronos.egl.EGLDisplay;
  * </pre>
  * 2017/12/5
  */
-public class GLSVConfigChooserConverter {
+public class GLSVConverter {
 
     public static GLSurfaceView.EGLConfigChooser convertEGLConfigChooser(final EGLConfigChooser eglConfigChooser) {
         return new GLSurfaceView.EGLConfigChooser() {

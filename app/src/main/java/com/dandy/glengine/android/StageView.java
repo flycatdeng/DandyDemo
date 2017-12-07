@@ -8,7 +8,8 @@ import android.util.AttributeSet;
 
 import com.dandy.glengine.IGLActor;
 import com.dandy.glengine.Stage;
-import com.dandy.helper.opengl.eglconfigchooser.AntiAliasingEGLConfigChooser;
+import com.dandy.helper.opengl.egl.AntiAliasingEGLConfigChooser;
+import com.dandy.helper.opengl.egl.GLSVConverter;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -59,7 +60,7 @@ public class StageView extends GLSurfaceView {
 
     public void initRenderer() {
         if (mEGLConfigChooser == null) {
-            mEGLConfigChooser = new AntiAliasingEGLConfigChooser();
+            mEGLConfigChooser = GLSVConverter.convertEGLConfigChooser(new AntiAliasingEGLConfigChooser());
         }
         setRenderer(mRenderer); // 设置渲染器
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
