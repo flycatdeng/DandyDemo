@@ -4,15 +4,20 @@ import android.opengl.GLUtils;
 
 import com.dandy.helper.android.LogHelper;
 import com.dandy.helper.opengl.egl.DefaultContextFactory;
+import com.dandy.helper.opengl.egl.DefaultWindowSurfaceFactory;
 import com.dandy.helper.opengl.egl.EGLConfigChooser;
 import com.dandy.helper.opengl.egl.EGLContextFactory;
+import com.dandy.helper.opengl.egl.EGLWindowSurfaceFactory;
+import com.dandy.helper.opengl.egl.IEGLAider;
 import com.dandy.helper.opengl.egl.SimpleEGLConfigChooser;
 
 import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGL11;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
+import javax.microedition.khronos.opengles.GL;
 
 /**
  * <pre>
@@ -38,7 +43,7 @@ import javax.microedition.khronos.egl.EGLSurface;
  * </pre>
  * 2017/12/5
  */
-public class Egl10Aider {
+public class Egl10Aider implements IEGLAider {
     private static final String TAG = "Egl10Aider";
     private EGL10 mEgl;
     private EGLDisplay mEglDisplay = EGL10.EGL_NO_DISPLAY;// 显示设备
@@ -47,13 +52,15 @@ public class Egl10Aider {
     private EGLSurface mEglSurface = EGL10.EGL_NO_SURFACE;
     private EGLConfigChooser mEGLConfigChooser;//符合渲染需求的EGLConfig选择帮助类
     private EGLContextFactory mEGLContextFactory;
+    private EGLWindowSurfaceFactory mEGLWindowSurfaceFactory;
     private boolean mIsGLThreadCreated = false;
     private int mEGLContextClientVersion;
+    private boolean mPreserveEGLContextOnPause;//onPause的时候是否保存当前EGL上下文
 
     /**
      * @param nativeWindowSurface NativeWindowType类型，从c层源码可以看到，Android里可以是SurfaceView或SurfaceHolder或Surface，前两者都是为了提供Surface。或者是SurfaceTexture
      */
-    private void init(Object nativeWindowSurface) {
+    public void init(Object nativeWindowSurface) {
         //1.获取EGL对象
         mEgl = (EGL10) EGLContext.getEGL();
 
@@ -93,11 +100,10 @@ public class Egl10Aider {
         }
 
         //6.创建屏幕上的渲染区域：EGL窗口
-        mEglSurface = mEgl.eglCreateWindowSurface(mEglDisplay,//指定EGL显示连接
-                mEglConfig, //指定配置
-                nativeWindowSurface, //指定原生窗口，
-                null//attribList指定窗口属性列表,EGL_RENDER_BUFFER指定渲染所用的缓冲区，值EGL_SINGLE_BUFFER或EGL_BACK_BUFFER(默认值)
-        );
+        if (mEGLWindowSurfaceFactory == null) {
+            mEGLWindowSurfaceFactory = new DefaultWindowSurfaceFactory();
+        }
+        mEglSurface = mEGLWindowSurfaceFactory.createWindowSurface(mEgl, mEglDisplay, mEglConfig, nativeWindowSurface);
         if (mEglSurface == null || mEglSurface == EGL10.EGL_NO_SURFACE) {
             int error = mEgl.eglGetError();
             //EGL_BAD_MATCH 12297 nativeWindowSurface不匹配提供的mEglConfig
@@ -122,12 +128,51 @@ public class Egl10Aider {
         }
     }
 
-    public void show() {
-        show(mEglDisplay, mEglSurface);
-    }
-
     public void show(EGLDisplay display, EGLSurface surface) {
         mEgl.eglSwapBuffers(display, surface);
+    }
+
+    @Override
+    public boolean swap() {
+        show(mEglDisplay, mEglSurface);
+        return mEgl.eglGetError() != EGL11.EGL_CONTEXT_LOST;
+    }
+
+    public void onDestroy() {
+        LogHelper.d(TAG, LogHelper.getThreadName());
+        if (mEglContext != null) {
+            mEGLContextFactory.destroyContext(mEgl, mEglDisplay, mEglContext);
+            mEglContext = null;
+        }
+        if (mEglDisplay != null) {
+            mEgl.eglTerminate(mEglDisplay);
+            mEglDisplay = null;
+        }
+    }
+
+    public void destroySurface() {
+        LogHelper.d(TAG, LogHelper.getThreadName());
+        if (mEglSurface != null && mEglSurface != EGL10.EGL_NO_SURFACE) {
+            mEgl.eglMakeCurrent(mEglDisplay, EGL10.EGL_NO_SURFACE,
+                    EGL10.EGL_NO_SURFACE,
+                    EGL10.EGL_NO_CONTEXT);
+            mEGLWindowSurfaceFactory.destroySurface(mEgl, mEglDisplay, mEglSurface);
+            mEglSurface = null;
+        }
+    }
+
+    public void purgeBuffers() {
+        LogHelper.d(TAG, LogHelper.getThreadName());
+        mEgl.eglMakeCurrent(mEglDisplay,
+                EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE,
+                EGL10.EGL_NO_CONTEXT);
+        mEgl.eglMakeCurrent(mEglDisplay,
+                mEglSurface, mEglSurface,
+                mEglContext);
+    }
+
+    public void setGLThreadCreated(boolean created) {
+        mIsGLThreadCreated = created;
     }
 
     public void setEGLConfigChooser(EGLConfigChooser configChooser) {
@@ -140,6 +185,29 @@ public class Egl10Aider {
         mEGLContextFactory = factory;
     }
 
+    public void setEGLWindowSurfaceFactory(EGLWindowSurfaceFactory eglWindowSurfaceFactory) {
+        checkRenderThreadState();
+        mEGLWindowSurfaceFactory = eglWindowSurfaceFactory;
+    }
+
+    public void setPreserveEGLContextOnPause(boolean preserveOnPause) {
+        mPreserveEGLContextOnPause = preserveOnPause;
+    }
+
+    public boolean isPreserveEGLContextOnPause() {
+        return mPreserveEGLContextOnPause;
+    }
+
+    @Override
+    public GL getGL() {
+        return mEglContext.getGL();
+    }
+
+    @Override
+    public EGLConfig getEGLConfig() {
+        return mEglConfig;
+    }
+
     /**
      * Inform the default EGLContextFactory and default EGLConfigChooser
      * which EGLContext client version to pick.
@@ -150,11 +218,20 @@ public class Egl10Aider {
         mEGLContextClientVersion = version;
     }
 
-    private void checkRenderThreadState() {
+    public void checkRenderThreadState() {
         if (mIsGLThreadCreated) {
             throw new IllegalStateException(
                     "setRenderer has already been called for this instance.");
         }
     }
 
+    @Override
+    public void destroyEGLSurface() {
+
+    }
+
+    @Override
+    public void finish() {
+
+    }
 }

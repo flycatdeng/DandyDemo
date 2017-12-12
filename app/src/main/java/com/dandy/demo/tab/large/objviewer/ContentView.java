@@ -32,7 +32,6 @@ public class ContentView extends FrameLayout {
     private Stage mStage;
     private ActorObject3D mActor;
     private TouchZoomAider mTouchZoomAider;
-    private Vec3 mScale = new Vec3(0.3f);
 
     public ContentView(@NonNull Context context) {
         super(context);
@@ -44,7 +43,7 @@ public class ContentView extends FrameLayout {
         mTouchZoomAider.setThreshold(10);
         addView(mStageView);
         new Obj3DLoadAider().loadFromInputStreamAsync(
-                AssetsHelper.getInputStream(mContext, "demo/obj/head.obj"),
+                AssetsHelper.getInputStream(mContext, "demo/obj/changgui.obj"),
                 new OnLoadListener() {
 
                     @Override
@@ -54,7 +53,7 @@ public class ContentView extends FrameLayout {
                         mActor.setTexture(AssetsHelper.getBitmap(mContext, "demo/obj/head.jpg"));
                         mActor.loadFromData(result.getVertexXYZ(), result.getNormalVectorXYZ(), result.getTextureVertexST());
                         mStage.add(mActor);
-                        mActor.scale(mScale);
+                        mActor.scale(0.2f);
                         mActor.rotate(30f, 0f, 1f, 0f);
                         mActor.requestRender();
                     }
