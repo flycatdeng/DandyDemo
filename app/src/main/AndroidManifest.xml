@@ -130,6 +130,13 @@
                 <category android:name="com.dandy.demo.category.OPENGL" />
             </intent-filter>
         </activity>
+        <activity android:name=".tab.large.objviewer.CameraActivity"
+            android:label="Camera">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.dandy.demo.category.LARGE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
