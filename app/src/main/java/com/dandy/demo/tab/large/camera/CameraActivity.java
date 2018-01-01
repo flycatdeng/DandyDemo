@@ -1,4 +1,4 @@
-package com.dandy.demo.tab.large.objviewer;
+package com.dandy.demo.tab.large.camera;
 
 import com.dandy.demo.tab.BaseDemoAty;
 
