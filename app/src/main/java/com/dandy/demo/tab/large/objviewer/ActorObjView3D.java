@@ -33,6 +33,7 @@ import java.util.List;
  */
 public class ActorObjView3D extends Actor {
     private static final String TAG = "ActorObjView3D";
+    private ObjViewData mObjViewData = new ObjViewData();
     private FloatBuffer mVertexBuffer;// 顶点坐标数据缓冲
     private FloatBuffer mNormalBuffer;// 顶点法向量数据缓冲
     private FloatBuffer mTexCoorBuffer;// 顶点纹理坐标数据缓冲
@@ -249,7 +250,7 @@ public class ActorObjView3D extends Actor {
         }
         onDrawArraysPre();
         // 绘制加载的物体
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES,//希望绘制的是一个三角形
+        GLES20.glDrawArrays(mObjViewData.primitiveMode,//GLES20.GL_TRIANGLES,希望绘制的是一个三角面;GLES20.GL_LINE_STRIP,三角形
                 0, //顶点数组的起始索引
                 mVertexCount//绘制多少个顶点
         );
@@ -302,5 +303,9 @@ public class ActorObjView3D extends Actor {
 
     protected void setCameraLocation(Vec3 vec) {
         mCameraLocationBuffer = ArrayToBufferHelper.floatArrayToBuffer(vec.toFloatArray());
+    }
+
+    public ObjViewData getObjViewData() {
+        return mObjViewData;
     }
 }

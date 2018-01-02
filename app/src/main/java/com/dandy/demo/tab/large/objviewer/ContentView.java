@@ -55,11 +55,17 @@ public class ContentView extends FrameLayout {
                         mActor.scale(0.2f);
                         mActor.rotate(30f, 0f, 1f, 0f);
                         mActor.requestRender();
+                        if (mOnDataLoadListener != null) {
+                            mOnDataLoadListener.onDataOK(mActor.getObjViewData());
+                        }
                     }
 
                     @Override
                     public void onLoadFailed(String failedMsg) {
                         LogHelper.d(TAG, LogHelper.getThreadName() + " failedMsg=" + failedMsg);
+                        if (mOnDataLoadListener != null) {
+                            mOnDataLoadListener.onDataFailed();
+                        }
                     }
                 }
         );
@@ -81,5 +87,22 @@ public class ContentView extends FrameLayout {
         mTouchZoomAider.dealTouchZoom(ev);
         mActor.requestRender();
         return super.dispatchTouchEvent(ev);
+    }
+
+    public void requestRender() {
+        mActor.requestRender();
+    }
+
+
+    public static interface OnDataLoadListener {
+        void onDataOK(ObjViewData data);
+
+        void onDataFailed();
+    }
+
+    private OnDataLoadListener mOnDataLoadListener;
+
+    public void setOnDataLoadListener(OnDataLoadListener listener) {
+        mOnDataLoadListener = listener;
     }
 }

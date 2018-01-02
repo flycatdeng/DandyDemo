@@ -14,4 +14,11 @@
         <item name="android:textColor">@color/normalText</item>
         <item name="android:textSize">20sp</item>
     </style>
+
+    <style name="ObjViewer_Menu_Image">
+        <item name="android:layout_width">@dimen/objviewer_image_wh</item>
+        <item name="android:layout_height">@dimen/objviewer_image_wh</item>
+        <item name="android:padding">@dimen/objviewer_image_padding</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
 </resources>
