@@ -1,7 +1,6 @@
 package com.dandy.demo.tab.large.objviewer;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
@@ -30,10 +29,10 @@ public class ContentView extends FrameLayout {
     private Context mContext;
     private StageView mStageView;
     private Stage mStage;
-    private ActorObject3D mActor;
+    private ActorObjView3D mActor;
     private TouchZoomAider mTouchZoomAider;
 
-    public ContentView(@NonNull Context context) {
+    public ContentView(Context context) {
         super(context);
         mContext = context;
         mStageView = new StageView(mContext);
@@ -49,7 +48,7 @@ public class ContentView extends FrameLayout {
                     @Override
                     public void onLoadOK(Obj3DLoadResult result) {
                         LogHelper.d(TAG, LogHelper.getThreadName() + " Obj3DLoadResult=" + result.toString());
-                        mActor = new ActorObject3D(mContext);
+                        mActor = new ActorObjView3D(mContext);
                         mActor.setTexture(AssetsHelper.getBitmap(mContext, "demo/obj/head.jpg"));
                         mActor.loadFromData(result.getVertexXYZ(), result.getNormalVectorXYZ(), result.getTextureVertexST());
                         mStage.add(mActor);
