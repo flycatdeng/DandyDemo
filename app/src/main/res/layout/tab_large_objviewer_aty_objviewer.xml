@@ -27,6 +27,11 @@
                 android:id="@+id/tab_large_objview_aty_menu_primitive_mode"
                 style="@style/ObjViewer_Menu_Image"
                 android:src="@drawable/objview_ball" />
+
+            <ImageView
+                android:id="@+id/tab_large_objview_aty_menu_projection"
+                style="@style/ObjViewer_Menu_Image"
+                android:src="@drawable/objview_projection_perspective" />
         </LinearLayout>
     </HorizontalScrollView>
 

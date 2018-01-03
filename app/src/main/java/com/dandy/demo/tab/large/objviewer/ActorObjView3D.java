@@ -3,6 +3,7 @@ package com.dandy.demo.tab.large.objviewer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import com.dandy.glengine.Actor;
 import com.dandy.helper.android.LogHelper;
@@ -14,6 +15,7 @@ import com.dandy.helper.opengl.VBOHelper;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.RunnableFuture;
 
 /**
  * <pre>
@@ -31,7 +33,7 @@ import java.util.List;
  * Email:dengchukun@qq.com
  * Wechat:flycatdeng
  */
-public class ActorObjView3D extends Actor {
+public class ActorObjView3D extends Actor implements IDataChangeListener {
     private static final String TAG = "ActorObjView3D";
     private ObjViewData mObjViewData = new ObjViewData();
     private FloatBuffer mVertexBuffer;// 顶点坐标数据缓冲
@@ -118,12 +120,28 @@ public class ActorObjView3D extends Actor {
         super.onSurfaceChanged(width, height);
         GLES20.glViewport(0, 0, width, height);
         float ratio = (float) width / height;
-        // 调用此方法计算产生透视投影矩阵
-        setProjectFrustum(-ratio, ratio, -1, 1, 2, 1111);
+        mObjViewData.projectMode = ObjViewData.ProjectMode.PERSPECTIVE;
+        mObjViewData.projectLeft = -ratio;
+        mObjViewData.projectRight = ratio;
+        mObjViewData.projectBottom = -1;
+        mObjViewData.projectTop = 1;
+        mObjViewData.projectNear = 2;
+        mObjViewData.projectFar = 1111;
+        setProjection();
         // 调用此方法产生摄像机9参数位置矩阵
         setCamera(0f, 0f, 50.0f, 0.0f, 0.0f, 0f, 0.0f, 1.0f, 0.0f);
         setCameraLocation(new Vec3(0f, 0f, 50.0f));
         setLightLocation(new Vec3(20f));
+    }
+
+    private void setProjection() {
+        LogHelper.d(TAG, LogHelper.getThreadName() + " mObjViewData.projectMode=" + mObjViewData.projectMode);
+        if (mObjViewData.projectMode == ObjViewData.ProjectMode.PERSPECTIVE) {
+            // 调用此方法计算产生透视投影矩阵
+            setProjectFrustum(mObjViewData.projectLeft, mObjViewData.projectRight, mObjViewData.projectBottom, mObjViewData.projectTop, mObjViewData.projectNear, mObjViewData.projectFar);
+        } else if (mObjViewData.projectMode == ObjViewData.ProjectMode.ORTHO) {
+            setProjectOrtho(mObjViewData.projectLeft, mObjViewData.projectRight, mObjViewData.projectBottom, mObjViewData.projectTop, mObjViewData.projectNear, mObjViewData.projectFar);
+        }
     }
 
     @Override
@@ -307,5 +325,22 @@ public class ActorObjView3D extends Actor {
 
     public ObjViewData getObjViewData() {
         return mObjViewData;
+    }
+
+    @Override
+    public void onProjectionChanged(ObjViewData data) {
+        addRunOnceBeforeDraw(new Runnable() {
+            @Override
+            public void run() {
+                setProjection();
+            }
+        });
+
+        requestRender();
+    }
+
+    @Override
+    public void onRenderValueChanged(ObjViewData data) {
+        requestRender();
     }
 }

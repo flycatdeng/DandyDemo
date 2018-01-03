@@ -56,7 +56,7 @@ public class ContentView extends FrameLayout {
                         mActor.rotate(30f, 0f, 1f, 0f);
                         mActor.requestRender();
                         if (mOnDataLoadListener != null) {
-                            mOnDataLoadListener.onDataOK(mActor.getObjViewData());
+                            mOnDataLoadListener.onDataOK(mActor.getObjViewData(), mActor);
                         }
                     }
 
@@ -89,13 +89,8 @@ public class ContentView extends FrameLayout {
         return super.dispatchTouchEvent(ev);
     }
 
-    public void requestRender() {
-        mActor.requestRender();
-    }
-
-
-    public static interface OnDataLoadListener {
-        void onDataOK(ObjViewData data);
+    public interface OnDataLoadListener {
+        void onDataOK(ObjViewData data, IDataChangeListener listener);
 
         void onDataFailed();
     }
