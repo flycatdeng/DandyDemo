@@ -122,7 +122,8 @@
                 <category android:name="com.dandy.demo.category.OPENGL" />
             </intent-filter>
         </activity>
-        <activity android:name=".tab.opengl.Obj3DBufferLoadAiderAty"
+        <activity
+            android:name=".tab.opengl.Obj3DBufferLoadAiderAty"
             android:label="OBJ/Obj3DBufferLoadAider">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -130,11 +131,20 @@
                 <category android:name="com.dandy.demo.category.OPENGL" />
             </intent-filter>
         </activity>
-        <activity android:name=".tab.large.camera.CameraActivity"
+        <activity
+            android:name=".tab.large.camera.CameraActivity"
             android:label="Camera">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="com.dandy.demo.category.LARGE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".tab.android.ImagePickActivity"
+            android:label="ImagePick">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.dandy.demo.category.ANDROID" />
             </intent-filter>
         </activity>
     </application>
