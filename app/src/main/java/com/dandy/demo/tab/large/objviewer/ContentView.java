@@ -9,9 +9,6 @@ import com.dandy.glengine.Stage;
 import com.dandy.glengine.android.StageView;
 import com.dandy.helper.android.LogHelper;
 import com.dandy.helper.android.res.AssetsHelper;
-import com.dandy.helper.android.res.SDCardHelper;
-import com.dandy.helper.java.math.Vec3;
-import com.dandy.module.obj3dload.ActorObject3D;
 import com.dandy.module.obj3dload.Obj3DBufferLoadAider;
 import com.dandy.module.obj3dload.Obj3DLoadAider;
 import com.dandy.module.obj3dload.Obj3DLoadResult;
@@ -84,7 +81,7 @@ public class ContentView extends FrameLayout {
                         mActor.scale(mObjViewData.scale);
                         mActor.requestRender();
                         if (mOnDataLoadListener != null) {
-                            mOnDataLoadListener.onDataOK(mActor.getObjViewData(), mActor);
+                            mOnDataLoadListener.onDataOK(mActor.getObjViewData(), mActor, result);
                         }
                     }
 
@@ -113,7 +110,7 @@ public class ContentView extends FrameLayout {
                 mActor.scale(data.scale);
                 mActor.requestRender();
                 if (mOnDataLoadListener != null) {
-                    mOnDataLoadListener.onDataOK(mActor.getObjViewData(), mActor);
+                    mOnDataLoadListener.onDataOK(mActor.getObjViewData(), mActor, result);
                 }
             }
 
@@ -182,7 +179,7 @@ public class ContentView extends FrameLayout {
     }
 
     public interface OnDataLoadListener {
-        void onDataOK(ObjViewData data, IDataChangeListener listener);
+        void onDataOK(ObjViewData data, IDataChangeListener listener, Obj3DLoadResult result);
 
         void onDataFailed(String msg);
     }

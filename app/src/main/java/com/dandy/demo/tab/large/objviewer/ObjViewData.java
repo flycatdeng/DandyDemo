@@ -75,4 +75,19 @@ public class ObjViewData {
      */
     public float scale = 0.2f;
 
+
+    @Override
+    public String toString() {
+        return "ObjViewData{" +
+                "primitiveMode=" + primitiveMode +
+                ", projectMode=" + projectMode +
+                ", projectLeft=" + projectLeft +
+                ", projectRight=" + projectRight +
+                ", projectBottom=" + projectBottom +
+                ", projectTop=" + projectTop +
+                ", projectNear=" + projectNear +
+                ", projectFar=" + projectFar +
+                ", scale=" + scale +
+                '}';
+    }
 }

@@ -17,6 +17,7 @@ import com.dandy.demo.R;
 import com.dandy.demo.tab.BaseDemoAty;
 import com.dandy.helper.android.LogHelper;
 import com.dandy.helper.java.basedata.StringHelper;
+import com.dandy.module.obj3dload.Obj3DLoadResult;
 
 public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListener {
     private static final String TAG = "ObjViewerActivity";
@@ -29,11 +30,13 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
     private ImageView mImageChooseImg;//选择纹理
     private ImageView mObjFileChooseImg;//Obj 文件选择
     private ImageView mObjBufferFileChooseImg;//Obj Buffer文件选择
+    private ImageView mStatsImg;//数据统计按钮
     private ObjViewData mObjViewData;
     private IDataChangeListener mDataChangeListener;
     private static final int ACTIVITY_REQUEST_CODE_IMAGE_PICK = 0;
     private static final int ACTIVITY_REQUEST_CODE_FILE_PICK = 1;
     private static final int ACTIVITY_REQUEST_CODE_BUFFER_FILE_PICK = 2;
+    private Obj3DLoadResult mObjModeData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +54,9 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
         mContentLayout.addView(mContentView);
         mContentView.setOnDataLoadListener(new ContentView.OnDataLoadListener() {
             @Override
-            public void onDataOK(ObjViewData data, IDataChangeListener listener) {
+            public void onDataOK(ObjViewData data, IDataChangeListener listener, Obj3DLoadResult result) {
                 mObjViewData = data;
+                mObjModeData = result;
                 mDataChangeListener = listener;
                 setImageClickable(true);
                 setClickListeners();
@@ -77,6 +81,7 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
         mImageChooseImg = (ImageView) findViewById(R.id.tab_large_objview_aty_menu_image);
         mObjFileChooseImg = (ImageView) findViewById(R.id.tab_large_objview_aty_menu_objfile);
         mObjBufferFileChooseImg = (ImageView) findViewById(R.id.tab_large_objview_aty_menu_buffer_objfile);
+        mStatsImg = (ImageView) findViewById(R.id.tab_large_objview_aty_menu_stats);
     }
 
     private void setClickListeners() {
@@ -85,6 +90,7 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
         mImageChooseImg.setOnClickListener(this);
         mObjFileChooseImg.setOnClickListener(this);
         mObjBufferFileChooseImg.setOnClickListener(this);
+        mStatsImg.setOnClickListener(this);
     }
 
     private void setImageClickable(boolean clickable) {
@@ -93,6 +99,7 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
         mImageChooseImg.setClickable(clickable);
         mObjFileChooseImg.setClickable(clickable);
         mObjBufferFileChooseImg.setClickable(clickable);
+        mStatsImg.setClickable(clickable);
     }
 
     @Override
@@ -150,9 +157,23 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
                     LogHelper.showToast(mContext, "Please install a File Manager.");
                 }
                 break;
+            case R.id.tab_large_objview_aty_menu_stats:
+                showStats();
+                break;
             default:
                 break;
         }
+    }
+
+    private void showStats() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("LoadTime= ").append(mObjModeData.getLoadTime()).append(" ms\n");
+        sb.append("Triangle Faces= ").append(mObjModeData.getTrianglesCount()).append("\n");
+        sb.append("Vertex num= ").append(mObjModeData.getVextexCount()).append("\n");
+        sb.append("Normal num= ").append(mObjModeData.getNormalVectorCount()).append("\n");
+        sb.append("TextureCoor num= ").append(mObjModeData.getTextureCoorCount()).append("\n");
+        sb.append(mObjViewData.toString());
+        LogHelper.showToast(mContext, sb.toString());
     }
 
     @Override
