@@ -15,7 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:scrollbars="none">
 
         <LinearLayout
             android:id="@+id/tab_large_objview_aty_menu"
@@ -32,6 +33,31 @@
                 android:id="@+id/tab_large_objview_aty_menu_projection"
                 style="@style/ObjViewer_Menu_Image"
                 android:src="@drawable/objview_projection_perspective" />
+
+            <ImageView
+                android:id="@+id/tab_large_objview_aty_menu_image"
+                style="@style/ObjViewer_Menu_Image"
+                android:src="@drawable/objview_image" />
+
+            <ImageView
+                android:id="@+id/tab_large_objview_aty_menu_objfile"
+                style="@style/ObjViewer_Menu_Image"
+                android:src="@drawable/objview_objfile" />
+
+            <ImageView
+                android:id="@+id/tab_large_objview_aty_menu_buffer_objfile"
+                style="@style/ObjViewer_Menu_Image"
+                android:src="@drawable/objview_buffer_objfile" />
+
+            <ImageView
+                android:id="@+id/tab_large_objview_aty_menu_light"
+                style="@style/ObjViewer_Menu_Image"
+                android:src="@drawable/objview_light_brightness" />
+
+            <ImageView
+                android:id="@+id/tab_large_objview_aty_menu_stats"
+                style="@style/ObjViewer_Menu_Image"
+                android:src="@drawable/objview_stats" />
         </LinearLayout>
     </HorizontalScrollView>
 
