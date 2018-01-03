@@ -36,7 +36,7 @@ import java.util.concurrent.RunnableFuture;
  */
 public class ActorObjView3D extends Actor implements IDataChangeListener {
     private static final String TAG = "ActorObjView3D";
-    private ObjViewData mObjViewData = new ObjViewData();
+    private ObjViewData mObjViewData = ObjViewData.getInstance();
     private FloatBuffer mVertexBuffer;// 顶点坐标数据缓冲
     private FloatBuffer mNormalBuffer;// 顶点法向量数据缓冲
     private FloatBuffer mTexCoorBuffer;// 顶点纹理坐标数据缓冲

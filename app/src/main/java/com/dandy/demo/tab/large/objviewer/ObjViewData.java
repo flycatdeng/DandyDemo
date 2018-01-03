@@ -12,6 +12,15 @@ import android.opengl.GLES20;
  */
 
 public class ObjViewData {
+    private static ObjViewData mObjViewData = new ObjViewData();
+
+    private ObjViewData() {
+    }
+
+    public synchronized static ObjViewData getInstance() {
+        return mObjViewData;
+    }
+
     /**
      * <pre>
      *     由于用于绘制的顶点数据都是三个顶点一组的
@@ -60,5 +69,10 @@ public class ObjViewData {
      * far面距离<p style="color:red">视点的</p>距离
      */
     public float projectFar = 1111;
+
+    /**
+     * 模型在xyz轴方向上的缩放
+     */
+    public float scale = 0.2f;
 
 }

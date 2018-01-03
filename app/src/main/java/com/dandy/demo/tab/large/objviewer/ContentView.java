@@ -8,12 +8,17 @@ import com.dandy.glengine.Stage;
 import com.dandy.glengine.android.StageView;
 import com.dandy.helper.android.LogHelper;
 import com.dandy.helper.android.res.AssetsHelper;
+import com.dandy.helper.android.res.SDCardHelper;
 import com.dandy.helper.java.math.Vec3;
 import com.dandy.module.obj3dload.ActorObject3D;
 import com.dandy.module.obj3dload.Obj3DLoadAider;
 import com.dandy.module.obj3dload.Obj3DLoadResult;
 import com.dandy.module.obj3dload.OnLoadListener;
 import com.dandy.module.touchzoom.TouchZoomAider;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 /**
  * <pre>
@@ -35,14 +40,30 @@ public class ContentView extends FrameLayout {
     public ContentView(Context context) {
         super(context);
         mContext = context;
+        mTouchZoomAider = new TouchZoomAider();
+        mTouchZoomAider.setThreshold(10);
+        initStageView(AssetsHelper.getInputStream(mContext, "demo/obj/changgui.obj"));
+        mTouchZoomAider.setTouchZoomListener(new TouchZoomAider.TouchZoomListenerAdapter() {
+            @Override
+            public void zoomOut(float scale) {
+                mActor.scale(scale);
+                ObjViewData.getInstance().scale *= scale;
+            }
+
+            @Override
+            public void zoomIn(float scale) {
+                mActor.scale(scale);
+                ObjViewData.getInstance().scale *= scale;
+            }
+        });
+    }
+
+    private void initStageView(InputStream objIns) {
         mStageView = new StageView(mContext);
         mStageView.initRenderer();
         mStage = mStageView.getStage();
-        mTouchZoomAider = new TouchZoomAider();
-        mTouchZoomAider.setThreshold(10);
         addView(mStageView);
-        new Obj3DLoadAider().loadFromInputStreamAsync(
-                AssetsHelper.getInputStream(mContext, "demo/obj/changgui.obj"),
+        new Obj3DLoadAider().loadFromInputStreamAsync(objIns,
                 new OnLoadListener() {
 
                     @Override
@@ -52,7 +73,8 @@ public class ContentView extends FrameLayout {
                         mActor.setTexture(AssetsHelper.getBitmap(mContext, "demo/obj/head.jpg"));
                         mActor.loadFromData(result.getVertexXYZ(), result.getNormalVectorXYZ(), result.getTextureVertexST());
                         mStage.add(mActor);
-                        mActor.scale(0.2f);
+                        ObjViewData data = ObjViewData.getInstance();
+                        mActor.scale(data.scale);
                         mActor.rotate(30f, 0f, 1f, 0f);
                         mActor.requestRender();
                         if (mOnDataLoadListener != null) {
@@ -64,22 +86,11 @@ public class ContentView extends FrameLayout {
                     public void onLoadFailed(String failedMsg) {
                         LogHelper.d(TAG, LogHelper.getThreadName() + " failedMsg=" + failedMsg);
                         if (mOnDataLoadListener != null) {
-                            mOnDataLoadListener.onDataFailed();
+                            mOnDataLoadListener.onDataFailed(" failedMsg=" + failedMsg);
                         }
                     }
                 }
         );
-        mTouchZoomAider.setTouchZoomListener(new TouchZoomAider.TouchZoomListenerAdapter() {
-            @Override
-            public void zoomOut(float scale) {
-                mActor.scale(scale);
-            }
-
-            @Override
-            public void zoomIn(float scale) {
-                mActor.scale(scale);
-            }
-        });
     }
 
     @Override
@@ -89,10 +100,22 @@ public class ContentView extends FrameLayout {
         return super.dispatchTouchEvent(ev);
     }
 
+    public void changeObjFileFromSDCard(String path) {
+        removeView(mStageView);
+        try {
+            initStageView(new FileInputStream(path));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            if (mOnDataLoadListener != null) {
+                mOnDataLoadListener.onDataFailed(e.getMessage());
+            }
+        }
+    }
+
     public interface OnDataLoadListener {
         void onDataOK(ObjViewData data, IDataChangeListener listener);
 
-        void onDataFailed();
+        void onDataFailed(String msg);
     }
 
     private OnDataLoadListener mOnDataLoadListener;

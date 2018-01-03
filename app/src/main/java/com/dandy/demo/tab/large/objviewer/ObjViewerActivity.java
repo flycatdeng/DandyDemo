@@ -26,9 +26,11 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
     private ImageView mPrimitiveModeImg;//图元模式
     private ImageView mProjectionImg;//投影模式
     private ImageView mImageChooseImg;//选择纹理
+    private ImageView mObjFileChooseImg;//Obj 文件选择
     private ObjViewData mObjViewData;
     private IDataChangeListener mDataChangeListener;
     private static final int ACTIVITY_REQUEST_CODE_IMAGE_PICK = 0;
+    private static final int ACTIVITY_REQUEST_CODE_FILE_PICK = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,10 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
         mContext = this;
         setContentView(R.layout.tab_large_objviewer_aty_objviewer);
         findViews();
+        initObjViewContent();
+    }
+
+    private void initObjViewContent() {
         mContentView = new ContentView(mContext);
         mContentView.setFocusable(true);
         mContentView.setClickable(true);
@@ -45,14 +51,15 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
             public void onDataOK(ObjViewData data, IDataChangeListener listener) {
                 mObjViewData = data;
                 mDataChangeListener = listener;
-//                mMenuLayout.setVisibility(View.VISIBLE);
-//                mMenuLayout.bringToFront();
+                setImageClickable(true);
                 setClickListeners();
             }
 
             @Override
-            public void onDataFailed() {
+            public void onDataFailed(String msg) {
+                setImageClickable(true);
                 LogHelper.d(TAG, LogHelper.getThreadName());
+                LogHelper.showToastOnUIThread(mContext, LogHelper.getThreadName() + " " + msg);
             }
         });
     }
@@ -65,19 +72,27 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
         mProjectionImg = (ImageView) findViewById(R.id.tab_large_objview_aty_menu_projection);
         mProjectionImg.setTag(R.drawable.objview_projection_perspective);
         mImageChooseImg = (ImageView) findViewById(R.id.tab_large_objview_aty_menu_image);
+        mObjFileChooseImg = (ImageView) findViewById(R.id.tab_large_objview_aty_menu_objfile);
     }
 
     private void setClickListeners() {
         mPrimitiveModeImg.setOnClickListener(this);
         mProjectionImg.setOnClickListener(this);
         mImageChooseImg.setOnClickListener(this);
+        mObjFileChooseImg.setOnClickListener(this);
     }
 
+    private void setImageClickable(boolean clickable) {
+        mPrimitiveModeImg.setClickable(clickable);
+        mProjectionImg.setClickable(clickable);
+        mImageChooseImg.setClickable(clickable);
+        mObjFileChooseImg.setClickable(clickable);
+    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tab_large_objview_aty_menu_primitive_mode:
+            case R.id.tab_large_objview_aty_menu_primitive_mode://切换图元模式
                 boolean isPrimitiveModeTriangle = ((int) mPrimitiveModeImg.getTag()) == R.drawable.objview_ball;//之前的图元是三角面吗？
                 if (isPrimitiveModeTriangle) {
                     mPrimitiveModeImg.setImageResource(R.drawable.objview_ball_wireframe);
@@ -90,7 +105,7 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
                 }
                 mDataChangeListener.onRenderValueChanged(mObjViewData);
                 break;
-            case R.id.tab_large_objview_aty_menu_projection:
+            case R.id.tab_large_objview_aty_menu_projection://切换投影模式
                 boolean isProjectionPerspective = ((int) mProjectionImg.getTag()) == R.drawable.objview_projection_perspective;//之前的投影模式是透视吗？
                 LogHelper.d(TAG, LogHelper.getThreadName() + " isProjectionPerspective=" + isProjectionPerspective);
                 if (isProjectionPerspective) {
@@ -104,10 +119,20 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
                 }
                 mDataChangeListener.onProjectionChanged(mObjViewData);
                 break;
-            case R.id.tab_large_objview_aty_menu_image:
+            case R.id.tab_large_objview_aty_menu_image://选择纹理
                 Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intent.setType("image/*");
                 startActivityForResult(intent, ACTIVITY_REQUEST_CODE_IMAGE_PICK);
+                break;
+            case R.id.tab_large_objview_aty_menu_objfile:
+                Intent intent1 = new Intent(Intent.ACTION_GET_CONTENT);
+                intent1.setType("*/*");
+                intent1.addCategory(Intent.CATEGORY_OPENABLE);
+                try {
+                    startActivityForResult(Intent.createChooser(intent1, "Select a File to Upload"), ACTIVITY_REQUEST_CODE_FILE_PICK);
+                } catch (android.content.ActivityNotFoundException ex) {
+                    LogHelper.showToast(mContext, "Please install a File Manager.");
+                }
                 break;
             default:
                 break;
@@ -120,7 +145,7 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
         if (ACTIVITY_REQUEST_CODE_IMAGE_PICK == requestCode && resultCode == RESULT_OK && null != data) {
             //获取返回的数据，这里是android自定义的Uri地址
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
             //获取选择照片的数据视图
             Cursor cursor = getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
@@ -130,6 +155,36 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             mDataChangeListener.onTextureChanged(BitmapFactory.decodeFile(picturePath));
+        } else if (ACTIVITY_REQUEST_CODE_FILE_PICK == requestCode && resultCode == RESULT_OK && null != data) {
+            Uri uri = data.getData();
+            String path = getPath(this, uri);
+            if (path == null) {
+                LogHelper.showToast(this, "path is null");
+            } else if (!path.endsWith(".obj")) {
+                LogHelper.showToast(this, "必须是obj文件（以.obj结尾）");
+            } else {
+                setImageClickable(false);
+                mContentView.changeObjFileFromSDCard(path);
+            }
         }
+    }
+
+    private String getPath(Context context, Uri uri) {
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
+            String[] projection = {"_data"};
+            Cursor cursor = null;
+            try {
+                cursor = context.getContentResolver().query(uri, projection, null, null, null);
+                int column_index = cursor.getColumnIndexOrThrow("_data");
+                if (cursor.moveToFirst()) {
+                    return cursor.getString(column_index);
+                }
+            } catch (Exception e) {
+                // Eat it
+            }
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+        return null;
     }
 }
