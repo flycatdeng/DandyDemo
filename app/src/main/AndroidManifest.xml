@@ -147,6 +147,14 @@
                 <category android:name="com.dandy.demo.category.ANDROID" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".tab.android.FilePickAty"
+            android:label="FilePick">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.dandy.demo.category.ANDROID" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
