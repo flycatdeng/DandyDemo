@@ -3,7 +3,6 @@ package com.dandy.glengine;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
-import android.support.annotation.CallSuper;
 
 import com.dandy.helper.android.LogHelper;
 import com.dandy.helper.java.PendingThreadAider;
@@ -149,7 +148,6 @@ public class Actor implements IGLActor, IActorMatrixOperation, IActorPendding {
      * 绘制，此时的mProgramID已经得到了，而且已经调用了GLES20.glUseProgram(mProgramID);
      * 子类需要重写这个方法去实现自己的绘制
      */
-    @CallSuper
     protected void onDraw() {
         GLES20.glUseProgram(mProgramID);
         dealRunOnceOnDraw();
