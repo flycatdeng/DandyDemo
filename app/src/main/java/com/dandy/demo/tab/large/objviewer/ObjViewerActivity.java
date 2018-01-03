@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import com.dandy.demo.R;
 import com.dandy.demo.tab.BaseDemoAty;
 import com.dandy.helper.android.LogHelper;
+import com.dandy.helper.java.basedata.StringHelper;
 
 public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListener {
     private static final String TAG = "ObjViewerActivity";
@@ -27,10 +28,12 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
     private ImageView mProjectionImg;//投影模式
     private ImageView mImageChooseImg;//选择纹理
     private ImageView mObjFileChooseImg;//Obj 文件选择
+    private ImageView mObjBufferFileChooseImg;//Obj Buffer文件选择
     private ObjViewData mObjViewData;
     private IDataChangeListener mDataChangeListener;
     private static final int ACTIVITY_REQUEST_CODE_IMAGE_PICK = 0;
     private static final int ACTIVITY_REQUEST_CODE_FILE_PICK = 1;
+    private static final int ACTIVITY_REQUEST_CODE_BUFFER_FILE_PICK = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,7 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
         mProjectionImg.setTag(R.drawable.objview_projection_perspective);
         mImageChooseImg = (ImageView) findViewById(R.id.tab_large_objview_aty_menu_image);
         mObjFileChooseImg = (ImageView) findViewById(R.id.tab_large_objview_aty_menu_objfile);
+        mObjBufferFileChooseImg = (ImageView) findViewById(R.id.tab_large_objview_aty_menu_buffer_objfile);
     }
 
     private void setClickListeners() {
@@ -80,6 +84,7 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
         mProjectionImg.setOnClickListener(this);
         mImageChooseImg.setOnClickListener(this);
         mObjFileChooseImg.setOnClickListener(this);
+        mObjBufferFileChooseImg.setOnClickListener(this);
     }
 
     private void setImageClickable(boolean clickable) {
@@ -87,6 +92,7 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
         mProjectionImg.setClickable(clickable);
         mImageChooseImg.setClickable(clickable);
         mObjFileChooseImg.setClickable(clickable);
+        mObjBufferFileChooseImg.setClickable(clickable);
     }
 
     @Override
@@ -133,6 +139,16 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
                 } catch (android.content.ActivityNotFoundException ex) {
                     LogHelper.showToast(mContext, "Please install a File Manager.");
                 }
+                break;//ACTIVITY_REQUEST_CODE_BUFFER_FILE_PICK
+            case R.id.tab_large_objview_aty_menu_buffer_objfile:
+                Intent intent2 = new Intent(Intent.ACTION_GET_CONTENT);
+                intent2.setType("*/*");
+                intent2.addCategory(Intent.CATEGORY_OPENABLE);
+                try {
+                    startActivityForResult(Intent.createChooser(intent2, "Select a File to Upload"), ACTIVITY_REQUEST_CODE_BUFFER_FILE_PICK);
+                } catch (android.content.ActivityNotFoundException ex) {
+                    LogHelper.showToast(mContext, "Please install a File Manager.");
+                }
                 break;
             default:
                 break;
@@ -165,6 +181,19 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
             } else {
                 setImageClickable(false);
                 mContentView.changeObjFileFromSDCard(path);
+            }
+        } else if (ACTIVITY_REQUEST_CODE_BUFFER_FILE_PICK == requestCode && resultCode == RESULT_OK && null != data) {
+            Uri uri = data.getData();
+            String path = getPath(this, uri);
+            LogHelper.d(TAG, LogHelper.getThreadName() + " path=" + path);
+            if (path == null) {
+                LogHelper.showToast(this, "path is null");
+            } else if ((!path.endsWith(".vxyz")) && (!path.endsWith(".nxyz")) && (!path.endsWith(".tst"))) {
+                LogHelper.showToast(this, "必须是vxyz/nxyz/tst文件");
+            } else {
+                String dir = StringHelper.getParentDirectory(path);
+                setImageClickable(false);
+                mContentView.changeObjBufferFileFromSDCard(dir);
             }
         }
     }
