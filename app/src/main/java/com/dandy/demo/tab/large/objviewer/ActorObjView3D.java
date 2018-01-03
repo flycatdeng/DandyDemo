@@ -9,6 +9,7 @@ import com.dandy.glengine.Actor;
 import com.dandy.helper.android.LogHelper;
 import com.dandy.helper.java.math.Vec3;
 import com.dandy.helper.java.nio.ArrayToBufferHelper;
+import com.dandy.helper.opengl.TextureHelper;
 import com.dandy.helper.opengl.TextureOptions;
 import com.dandy.helper.opengl.VBOHelper;
 
@@ -276,6 +277,7 @@ public class ActorObjView3D extends Actor implements IDataChangeListener {
     }
 
     protected void onDrawArraysPre() {
+        LogHelper.d(TAG, LogHelper.getThreadName() + " mTextureID=" + mTextureID + " muTextureHandle=" + muTextureHandle);
         if (muTextureHandle != -1 && mTextureID != -1) {//之所以放这里是因为可能子类需要绑定不同的纹理ID，
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureID);
@@ -341,6 +343,22 @@ public class ActorObjView3D extends Actor implements IDataChangeListener {
 
     @Override
     public void onRenderValueChanged(ObjViewData data) {
+        requestRender();
+    }
+
+    @Override
+    public void onTextureChanged(final Bitmap bitmap) {
+        if (mMatHasTexCoor == 0f) {
+            LogHelper.showToastOnUIThread(mContext, "这个模型没有纹理坐标，所以无法显示纹理");
+        }
+        addRunOnceBeforeDraw(new Runnable() {
+            @Override
+            public void run() {
+                mMatHasTexture = 1.0f;
+                int newTextureID = TextureHelper.initTextureID(bitmap);
+                setTexture(newTextureID);
+            }
+        });
         requestRender();
     }
 }
