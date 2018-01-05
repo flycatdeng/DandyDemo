@@ -1,0 +1,231 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tab_large_objview_view_item_light_rl_root"
+    android:layout_width="240dp"
+    android:layout_height="match_parent"
+    android:background="#00000000">
+
+    <RelativeLayout
+        android:id="@+id/tab_large_objview_view_item_light_title_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/tab_large_objview_view_item_light_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:text="Light"
+            android:textSize="40px" />
+
+        <Button
+            android:id="@+id/tab_large_objview_view_item_light_title_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:text="@string/objview_delete" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tab_large_objview_view_item_light_lab_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tab_large_objview_view_item_light_title_rl"
+        android:text="Light Position"
+        android:textSize="30px" />
+
+    <LinearLayout
+        android:id="@+id/tab_large_objview_view_item_light_ll_position_x"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/tab_large_objview_view_item_light_lab_location"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tab_large_objview_view_item_light_lab_position_x"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="X:" />
+
+        <SeekBar
+            android:id="@+id/tab_large_objview_view_item_light_seekbar_position_x"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tab_large_objview_view_item_light_minus_position_x"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="-" />
+
+        <EditText
+            android:id="@+id/tab_large_objview_view_item_light_ed_position_x"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:inputType="textPersonName"
+            android:text="0.0" />
+
+        <TextView
+            android:id="@+id/tab_large_objview_view_item_light_plus_position_x"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="+" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tab_large_objview_view_item_light_ll_position_y"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/tab_large_objview_view_item_light_ll_position_x"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tab_large_objview_view_item_light_lab_position_y"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Y:" />
+
+        <SeekBar
+            android:id="@+id/tab_large_objview_view_item_light_seekbar_position_y"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tab_large_objview_view_item_light_minus_position_y"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="-" />
+
+        <EditText
+            android:id="@+id/tab_large_objview_view_item_light_ed_position_y"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:inputType="textPersonName"
+            android:text="0.0" />
+
+        <TextView
+            android:id="@+id/tab_large_objview_view_item_light_plus_position_y"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="+" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tab_large_objview_view_item_light_ll_position_z"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/tab_large_objview_view_item_light_ll_position_y"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tab_large_objview_view_item_light_lab_position_z"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Z:" />
+
+        <SeekBar
+            android:id="@+id/tab_large_objview_view_item_light_seekbar_position_z"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tab_large_objview_view_item_light_minus_position_z"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="-" />
+
+        <EditText
+            android:id="@+id/tab_large_objview_view_item_light_ed_position_z"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:inputType="textPersonName"
+            android:text="0.0" />
+
+        <TextView
+            android:id="@+id/tab_large_objview_view_item_light_plus_position_z"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="+" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/tab_large_objview_view_item_light_ll_guangqiang"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/tab_large_objview_view_item_light_ll_position_y"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tab_large_objview_view_item_light_lab_guangqiang_ambent"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="环境" />
+
+        <SeekBar
+            android:id="@+id/tab_large_objview_view_item_light_seekbar_guangqiang_ambent"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tab_large_objview_view_item_light_minus_guangqiang_ambent"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="-" />
+
+        <EditText
+            android:id="@+id/tab_large_objview_view_item_light_ed_guangqiang_ambent"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:inputType="textPersonName"
+            android:text="0.0" />
+
+        <TextView
+            android:id="@+id/tab_large_objview_view_item_light_plus_position_z"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="+" />
+    </LinearLayout>
+</RelativeLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.opengl.GLES20;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.dandy.demo.R;
 import com.dandy.demo.tab.BaseDemoAty;
@@ -31,6 +33,7 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
     private ImageView mObjFileChooseImg;//Obj 文件选择
     private ImageView mObjBufferFileChooseImg;//Obj Buffer文件选择
     private ImageView mStatsImg;//数据统计按钮
+    private ImageView mLightImg;//灯光按钮
     private ObjViewData mObjViewData;
     private IDataChangeListener mDataChangeListener;
     private static final int ACTIVITY_REQUEST_CODE_IMAGE_PICK = 0;
@@ -82,6 +85,7 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
         mObjFileChooseImg = (ImageView) findViewById(R.id.tab_large_objview_aty_menu_objfile);
         mObjBufferFileChooseImg = (ImageView) findViewById(R.id.tab_large_objview_aty_menu_buffer_objfile);
         mStatsImg = (ImageView) findViewById(R.id.tab_large_objview_aty_menu_stats);
+        mLightImg = (ImageView) findViewById(R.id.tab_large_objview_aty_menu_light);
     }
 
     private void setClickListeners() {
@@ -91,6 +95,7 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
         mObjFileChooseImg.setOnClickListener(this);
         mObjBufferFileChooseImg.setOnClickListener(this);
         mStatsImg.setOnClickListener(this);
+        mLightImg.setOnClickListener(this);
     }
 
     private void setImageClickable(boolean clickable) {
@@ -100,10 +105,14 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
         mObjFileChooseImg.setClickable(clickable);
         mObjBufferFileChooseImg.setClickable(clickable);
         mStatsImg.setClickable(clickable);
+        mLightImg.setClickable(clickable);
     }
 
     @Override
     public void onClick(View view) {
+        if (mContentView.getChildCount() > 1) {
+            mContentView.removeViewAt(1);
+        }
         switch (view.getId()) {
             case R.id.tab_large_objview_aty_menu_primitive_mode://切换图元模式
                 boolean isPrimitiveModeTriangle = ((int) mPrimitiveModeImg.getTag()) == R.drawable.objview_ball;//之前的图元是三角面吗？
@@ -137,7 +146,7 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
                 intent.setType("image/*");
                 startActivityForResult(intent, ACTIVITY_REQUEST_CODE_IMAGE_PICK);
                 break;
-            case R.id.tab_large_objview_aty_menu_objfile:
+            case R.id.tab_large_objview_aty_menu_objfile://切换模型
                 Intent intent1 = new Intent(Intent.ACTION_GET_CONTENT);
                 intent1.setType("*/*");
                 intent1.addCategory(Intent.CATEGORY_OPENABLE);
@@ -147,7 +156,7 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
                     LogHelper.showToast(mContext, "Please install a File Manager.");
                 }
                 break;//ACTIVITY_REQUEST_CODE_BUFFER_FILE_PICK
-            case R.id.tab_large_objview_aty_menu_buffer_objfile:
+            case R.id.tab_large_objview_aty_menu_buffer_objfile://切换模型（buffer数据）
                 Intent intent2 = new Intent(Intent.ACTION_GET_CONTENT);
                 intent2.setType("*/*");
                 intent2.addCategory(Intent.CATEGORY_OPENABLE);
@@ -157,8 +166,18 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
                     LogHelper.showToast(mContext, "Please install a File Manager.");
                 }
                 break;
-            case R.id.tab_large_objview_aty_menu_stats:
+            case R.id.tab_large_objview_aty_menu_stats://统计
                 showStats();
+                break;
+            case R.id.tab_large_objview_aty_menu_light:
+//                TextView tv=new TextView(mContext);
+//                tv.setText("Test");
+                LightItemView tv = LightItemView.fromXml(mContext);
+                tv.setColor(Color.RED);
+//                tv.setLab("环境:");
+//                tv.setClickable(false);
+                mContentView.addView(tv);
+                tv.bringToFront();
                 break;
             default:
                 break;

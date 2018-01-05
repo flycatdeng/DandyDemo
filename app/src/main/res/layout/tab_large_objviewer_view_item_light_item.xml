@@ -1,0 +1,47 @@
+<com.dandy.demo.tab.large.objviewer.LightItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tab_large_objview_view_item_light_item_rl_root"
+    android:layout_width="250dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#00000000">
+
+
+    <RelativeLayout
+        android:id="@+id/tab_large_objview_view_item_light_item_top"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true">
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/tab_large_objview_view_item_light_item_radio_direct_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:checked="true"
+                android:text="定向光" />
+            <RadioButton
+                android:id="@+id/tab_large_objview_view_item_light_item_radio_point_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="定位光" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/tab_large_objview_view_item_light_item_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:text="@string/objview_delete" />
+    </RelativeLayout>
+
+</com.dandy.demo.tab.large.objviewer.LightItemView>

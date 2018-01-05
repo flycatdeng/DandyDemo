@@ -1,0 +1,48 @@
+<com.dandy.demo.tab.large.objviewer.LightCtrlItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tab_large_objview_view_item_light_control_root"
+    android:layout_width="250dp"
+    android:layout_height="@dimen/objviewer_light_control_height"
+    android:background="#00000000"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tab_large_objview_view_item_light_control_lab"
+        android:layout_width="60dp"
+        android:layout_height="@dimen/objviewer_light_control_height"
+        android:layout_gravity="center"
+        android:gravity="right|center_vertical"
+        android:text="X:" />
+
+    <SeekBar
+        android:id="@+id/tab_large_objview_view_item_light_control_seekbar"
+        android:layout_width="90dp"
+        android:layout_height="@dimen/objviewer_light_control_height"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:max="100" />
+
+    <TextView
+        android:id="@+id/tab_large_objview_view_item_light_control_minus"
+        android:layout_width="25dp"
+        android:layout_height="@dimen/objviewer_light_control_height"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="-" />
+
+    <EditText
+        android:id="@+id/tab_large_objview_view_item_light_control_edit"
+        android:layout_width="50dp"
+        android:layout_height="@dimen/objviewer_light_control_height"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:inputType="number|numberDecimal"
+        android:text="0.0" />
+
+    <TextView
+        android:id="@+id/tab_large_objview_view_item_light_control_plus"
+        android:layout_width="25dp"
+        android:layout_height="@dimen/objviewer_light_control_height"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="+" />
+</com.dandy.demo.tab.large.objviewer.LightCtrlItemView>

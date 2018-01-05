@@ -9,4 +9,5 @@
 
     <dimen name="objviewer_image_wh">50dp</dimen>
     <dimen name="objviewer_image_padding">3dp</dimen>
+    <dimen name="objviewer_light_control_height">40dp</dimen>
 </resources>
