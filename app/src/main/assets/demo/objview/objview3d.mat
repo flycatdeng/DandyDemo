@@ -15,3 +15,6 @@ uniform vec3 uCameraLocation
 uniform sampler2D uTexture
 uniform float uHasTexCoor
 uniform float uHasTexture
+
+uniform float uAmbientInstensity
+uniform vec4 uLightAttrib

@@ -54,6 +54,8 @@ public class ActorObjView3D extends Actor implements IDataChangeListener {
     private int muHasTextureHandle = -1;//是否有纹理图句柄
     private int muLightLocationHandle = -1;//光源位置句柄
     private int muCameraLocationHandle = -1;//摄像机位置句柄
+    private int muAmbientInstensityHandle = -1;//环境光光强句柄
+    private int muLightAttribHandle = -1;//灯光其他属性句柄（定向光还是定位光，散射光光强，镜面光光强，镜面光粗糙度）
     private boolean isDataOK = false;
     //    private int vboId[] = new int[3];
     private float mMatHasTexCoor = 1f;
@@ -159,6 +161,9 @@ public class ActorObjView3D extends Actor implements IDataChangeListener {
         muHasTextureHandle = getHasTextureHandle();
         muLightLocationHandle = getLightLocationHandle();//光源位置句柄
         muCameraLocationHandle = getCameraLocationHandle();//摄像机位置句柄
+        muLightAttribHandle = getMaterialHandler("uLightAttrib");
+        muAmbientInstensityHandle = getMaterialHandler("uAmbientInstensity");
+
         LogHelper.d(TAG, LogHelper.getThreadName() +
                 " muMVPMatrixHandle=" + muMVPMatrixHandle +
                 " muModelMatrixHandle=" + muModelMatrixHandle +
@@ -266,6 +271,13 @@ public class ActorObjView3D extends Actor implements IDataChangeListener {
         }
         if (muCameraLocationHandle != -1) {
             GLES20.glUniform3fv(muCameraLocationHandle, 1, mCameraLocationBuffer);
+        }
+        if (muAmbientInstensityHandle != -1) {
+            GLES20.glUniform1f(muLightAttribHandle, mObjViewData.light.ambentIntensity);
+        }
+        if (muLightAttribHandle != -1) {
+            GLES20.glUniform4f(muLightAttribHandle, mObjViewData.light.lightMode == ObjViewData.LightMode.DIRECT ? 0.0f : 1.0f,
+                    mObjViewData.light.diffuseIntensity, mObjViewData.light.specularIntensity, mObjViewData.light.specularShininess);
         }
         onDrawArraysPre();
         // 绘制加载的物体

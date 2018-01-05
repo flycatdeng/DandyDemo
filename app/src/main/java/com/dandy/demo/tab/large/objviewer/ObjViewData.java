@@ -88,7 +88,7 @@ public class ObjViewData {
         public float ambentIntensity = 0.15f;//0.0~1.0
         public float diffuseIntensity = 0.8f;//0.0~1.0
         public float specularIntensity = 1.0f;//0.0~1.0
-        public float specularShininess = 1.0f;//0~100
+        public float specularShininess = 10.0f;//0~100
 
         @Override
         public String toString() {
