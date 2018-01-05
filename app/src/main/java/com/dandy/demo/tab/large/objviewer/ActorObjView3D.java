@@ -132,7 +132,7 @@ public class ActorObjView3D extends Actor implements IDataChangeListener {
         // 调用此方法产生摄像机9参数位置矩阵
         setCamera(0f, 0f, 50.0f, 0.0f, 0.0f, 0f, 0.0f, 1.0f, 0.0f);
         setCameraLocation(new Vec3(0f, 0f, 50.0f));
-        setLightLocation(new Vec3(20f));
+        setLightLocation(new Vec3(mObjViewData.light.lightPosX, mObjViewData.light.lightPosY, mObjViewData.light.lightPosZ));
     }
 
     private void setProjection() {
@@ -277,7 +277,6 @@ public class ActorObjView3D extends Actor implements IDataChangeListener {
     }
 
     protected void onDrawArraysPre() {
-        LogHelper.d(TAG, LogHelper.getThreadName() + " mTextureID=" + mTextureID + " muTextureHandle=" + muTextureHandle);
         if (muTextureHandle != -1 && mTextureID != -1) {//之所以放这里是因为可能子类需要绑定不同的纹理ID，
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureID);
@@ -360,5 +359,18 @@ public class ActorObjView3D extends Actor implements IDataChangeListener {
             }
         });
         requestRender();
+    }
+
+    @Override
+    public void onLightChanged(final ObjViewData mObjViewData) {
+        addRunOnceBeforeDraw(new Runnable() {
+            @Override
+            public void run() {
+                setLightLocation(new Vec3(mObjViewData.light.lightPosX, mObjViewData.light.lightPosY, mObjViewData.light.lightPosZ));
+            }
+        });
+        requestRender();
+
+
     }
 }

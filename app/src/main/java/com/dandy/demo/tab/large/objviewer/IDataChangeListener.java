@@ -22,4 +22,6 @@ public interface IDataChangeListener {
      * @param bitmap
      */
     void onTextureChanged(Bitmap bitmap);
+
+    void onLightChanged(ObjViewData mObjViewData);
 }

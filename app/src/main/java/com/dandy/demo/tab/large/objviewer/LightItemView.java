@@ -34,6 +34,7 @@ public class LightItemView extends LinearLayout {
     private LightCtrlItemView mLightCtrlSSGQ;//散射光强
     private LightCtrlItemView mLightCtrlJMGQ;//镜面光强
     private LightCtrlItemView mLightCtrlJMCC;//镜面光粗糙度
+    private ObjViewData.Light mLight = ObjViewData.getInstance().light;
 
     public LightItemView(Context context) {
         super(context);
@@ -50,8 +51,10 @@ public class LightItemView extends LinearLayout {
         LogHelper.d(TAG, LogHelper.getThreadName());
     }
 
-    public static LightItemView fromXml(Context context) {
-        return (LightItemView) View.inflate(context, R.layout.tab_large_objviewer_view_item_light_item, null);
+    public static LightItemView fromXml(Context context,LightDataChangeListener listener) {
+        LightItemView view = (LightItemView) View.inflate(context, R.layout.tab_large_objviewer_view_item_light_item, null);
+        view.setLightDataChangeListener(listener);
+        return view;
     }
 
     @Override
@@ -63,20 +66,81 @@ public class LightItemView extends LinearLayout {
         mDeleteButton = (Button) findViewById(R.id.tab_large_objview_view_item_light_item_delete);
 
 
-        mLightCtrlX = LightCtrlItemView.fromXml(mContext);
+        mLightCtrlX = LightCtrlItemView.fromXml(mContext, new LightCtrlItemView.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(float value) {
+                LogHelper.d(TAG, LogHelper.getThreadName());
+                mLight.lightPosX = value;
+                if (mLightDataChangeListener != null) {
+                    mLightDataChangeListener.OnLightChanged();
+                }
+            }
+        });
         mLightCtrlX.setLab("X:");
-        mLightCtrlY = LightCtrlItemView.fromXml(mContext);
+        mLightCtrlX.setValueRange(0, 100);
+        mLightCtrlY = LightCtrlItemView.fromXml(mContext, new LightCtrlItemView.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(float value) {
+                mLight.lightPosZ = value;
+                if (mLightDataChangeListener != null) {
+                    mLightDataChangeListener.OnLightChanged();
+                }
+            }
+        });
         mLightCtrlY.setLab("Y:");
-        mLightCtrlZ = LightCtrlItemView.fromXml(mContext);
+        mLightCtrlY.setValueRange(0, 100);
+        mLightCtrlZ = LightCtrlItemView.fromXml(mContext, new LightCtrlItemView.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(float value) {
+                mLight.lightPosY = value;
+                if (mLightDataChangeListener != null) {
+                    mLightDataChangeListener.OnLightChanged();
+                }
+            }
+        });
         mLightCtrlZ.setLab("Z:");
-        mLightCtrlHJGQ = LightCtrlItemView.fromXml(mContext);
+        mLightCtrlZ.setValueRange(0, 100);
+        mLightCtrlHJGQ = LightCtrlItemView.fromXml(mContext, new LightCtrlItemView.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(float value) {
+                mLight.ambentIntensity = value;
+                if (mLightDataChangeListener != null) {
+                    mLightDataChangeListener.OnLightChanged();
+                }
+            }
+        });
         mLightCtrlHJGQ.setLab("环境光强");
-        mLightCtrlSSGQ = LightCtrlItemView.fromXml(mContext);
+        mLightCtrlSSGQ = LightCtrlItemView.fromXml(mContext, new LightCtrlItemView.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(float value) {
+                mLight.diffuseIntensity = value;
+                if (mLightDataChangeListener != null) {
+                    mLightDataChangeListener.OnLightChanged();
+                }
+            }
+        });
         mLightCtrlSSGQ.setLab("散射光强");
-        mLightCtrlJMGQ = LightCtrlItemView.fromXml(mContext);
+        mLightCtrlJMGQ = LightCtrlItemView.fromXml(mContext, new LightCtrlItemView.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(float value) {
+                mLight.specularIntensity = value;
+                if (mLightDataChangeListener != null) {
+                    mLightDataChangeListener.OnLightChanged();
+                }
+            }
+        });
         mLightCtrlJMGQ.setLab("镜面光强");
-        mLightCtrlJMCC = LightCtrlItemView.fromXml(mContext);
+        mLightCtrlJMCC = LightCtrlItemView.fromXml(mContext, new LightCtrlItemView.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(float value) {
+                mLight.specularShininess = value;
+                if (mLightDataChangeListener != null) {
+                    mLightDataChangeListener.OnLightChanged();
+                }
+            }
+        });
         mLightCtrlJMCC.setLab("镜面粗糙");
+        mLightCtrlJMCC.setValueRange(0, 100);
         addView(mLightCtrlX);
         addView(mLightCtrlY);
         addView(mLightCtrlZ);
@@ -97,5 +161,32 @@ public class LightItemView extends LinearLayout {
         mPointLightBtn.setTextColor(color);
         mDirectLightBtn.setTextColor(color);
         mDeleteButton.setTextColor(color);
+        mLightCtrlX.setColor(color);
+        mLightCtrlY.setColor(color);
+        mLightCtrlZ.setColor(color);
+        mLightCtrlHJGQ.setColor(color);
+        mLightCtrlSSGQ.setColor(color);
+        mLightCtrlJMGQ.setColor(color);
+        mLightCtrlJMCC.setColor(color);
+    }
+
+    public void setLight(ObjViewData.Light light) {
+        mLightCtrlX.setValue(light.lightPosX);
+        mLightCtrlY.setValue(light.lightPosY);
+        mLightCtrlZ.setValue(light.lightPosZ);
+        mLightCtrlHJGQ.setValue(light.ambentIntensity);
+        mLightCtrlSSGQ.setValue(light.diffuseIntensity);
+        mLightCtrlJMGQ.setValue(light.specularIntensity);
+        mLightCtrlJMCC.setValue(light.specularShininess);
+    }
+
+    private LightDataChangeListener mLightDataChangeListener;
+
+    private void setLightDataChangeListener(LightDataChangeListener listener) {
+        mLightDataChangeListener = listener;
+    }
+
+    interface LightDataChangeListener {
+        void OnLightChanged();
     }
 }

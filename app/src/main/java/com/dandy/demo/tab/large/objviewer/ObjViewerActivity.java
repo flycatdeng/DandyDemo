@@ -172,8 +172,14 @@ public class ObjViewerActivity extends BaseDemoAty implements View.OnClickListen
             case R.id.tab_large_objview_aty_menu_light:
 //                TextView tv=new TextView(mContext);
 //                tv.setText("Test");
-                LightItemView tv = LightItemView.fromXml(mContext);
+                LightItemView tv = LightItemView.fromXml(mContext, new LightItemView.LightDataChangeListener() {
+                    @Override
+                    public void OnLightChanged() {
+                        mDataChangeListener.onLightChanged(mObjViewData);
+                    }
+                });
                 tv.setColor(Color.RED);
+                tv.setLight(mObjViewData.light);
 //                tv.setLab("环境:");
 //                tv.setClickable(false);
                 mContentView.addView(tv);

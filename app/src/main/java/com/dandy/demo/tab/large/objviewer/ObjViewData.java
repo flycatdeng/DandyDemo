@@ -74,7 +74,36 @@ public class ObjViewData {
      * 模型在xyz轴方向上的缩放
      */
     public float scale = 0.2f;
+    public Light light = new Light();
 
+    enum LightMode {
+        POINT, DIRECT
+    }
+
+    class Light {
+        public LightMode lightMode = LightMode.DIRECT;
+        public float lightPosX = 20f;//0~100
+        public float lightPosY = 20f;//0~100
+        public float lightPosZ = 20f;//0~100
+        public float ambentIntensity = 0.15f;//0.0~1.0
+        public float diffuseIntensity = 0.8f;//0.0~1.0
+        public float specularIntensity = 1.0f;//0.0~1.0
+        public float specularShininess = 1.0f;//0~100
+
+        @Override
+        public String toString() {
+            return "Light{" +
+                    "lightMode=" + lightMode +
+                    ", lightPosX=" + lightPosX +
+                    ", lightPosY=" + lightPosY +
+                    ", lightPosZ=" + lightPosZ +
+                    ", ambentIntensity=" + ambentIntensity +
+                    ", diffuseIntensity=" + diffuseIntensity +
+                    ", specularIntensity=" + specularIntensity +
+                    ", specularShininess=" + specularShininess +
+                    '}';
+        }
+    }
 
     @Override
     public String toString() {
@@ -88,6 +117,7 @@ public class ObjViewData {
                 ", projectNear=" + projectNear +
                 ", projectFar=" + projectFar +
                 ", scale=" + scale +
+                ", light=" + light.toString() +
                 '}';
     }
 }
